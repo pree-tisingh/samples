@@ -1,0 +1,35 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+    console.log(`${req.method} request for '${req.url}'`);
+    next();
+});
+
+app.get('/add-product', (req, res) => {
+    res.send(`
+        <form action="/add-product" method="POST">
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="size">Product Size:</label>
+            <input type="text" id="size" name="size"><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    `);
+});
+
+
+app.post('/add-product', (req, res) => {
+    const { name, size } = req.body;
+    console.log(`Product Name: ${name}, Product Size: ${size}`);
+    res.redirect('/add-product');
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
